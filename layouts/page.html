@@ -1,0 +1,28 @@
+{{ define "main" }}
+  <h1>{{ .Title }}</h1>
+
+  {{ $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" }}
+  {{ $dateHuman := .Date | time.Format ":date_long" }}
+  <time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
+  <h2>Original Image</h2>
+  {{ with .Page.Resources.GetMatch "featured.*" }}
+    {{ with .Process "fill 640x360" }}
+      <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}">
+    {{ end }}
+  {{ end }}
+  <h2>WEBP Image</h2>
+  {{ with .Page.Resources.GetMatch "featured.*" }}
+    {{ with .Process "fill 640x360 webp" }}
+      <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}">
+    {{ end }}
+  {{ end }}
+  <h2>AVIF Image</h2>
+  {{ with .Page.Resources.GetMatch "featured.*" }}
+    {{ with .Process "fill 640x360 avif" }}
+      <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}">
+    {{ end }}
+  {{ end }}
+
+  {{ .Content }}
+  {{ partial "terms.html" (dict "taxonomy" "tags" "page" .) }}
+{{ end }}
